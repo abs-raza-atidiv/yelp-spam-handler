@@ -147,7 +147,7 @@ def read_email_from_gmail():
 			_ , data = mail.fetch(str(i).encode("utf-8"), '(RFC822)' )
 			if(processed_emails >= 2):
 				break
-			processed_emails += 1
+			# processed_emails += 1
 
 			for response_part in data:
 				if isinstance(response_part, tuple):
