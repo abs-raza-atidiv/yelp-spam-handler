@@ -244,14 +244,14 @@ if __name__=="__main__":
 	
 	labels_to_process = [
 		'incorrect_vl', 
-		'advertiser', 
+		'advertiser_nba', 
 		'ROCS_Handled',
 		'ROCS-Accepts'
 	]
 
 	processed_label = {
 		'incorrect_vl': 'incorrect_vl_processed',
-		'advertiser': 'advertiser_vl_processed',
+		'advertiser_nba': 'advertiser_nba_processed',
 		'ROCS_Handled': 'ROCS_Handled_Processed',
 		'ROCS-Accepts': 'ROCS-Accepts-Handled'
 	}
