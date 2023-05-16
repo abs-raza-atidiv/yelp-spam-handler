@@ -1,0 +1,12 @@
+attribute,action_taken,moderator_id,business_id,BizE_link,Admin_link,biz_country,source_type,source_via,time_created,time_acted,time_created_readable,time_acted_readable
+AddBusiness,approve,2431,78314309,https://bize.admin.yelp.com/biz/78314309,https://admin.yelp.com/biz_edit/78314309,US,user,main_site,1683922641,1683922726,,
+AddBusiness,approve,8754,78314744,https://bize.admin.yelp.com/biz/78314744,https://admin.yelp.com/biz_edit/78314744,US,user,main_site,1683929529,1683930097,,
+AddBusiness,approve,21063,78314414,https://bize.admin.yelp.com/biz/78314414,https://admin.yelp.com/biz_edit/78314414,CA,user,main_site,1683924086,1683924812,,
+AddBusiness,approve,7633,78313907,https://bize.admin.yelp.com/biz/78313907,https://admin.yelp.com/biz_edit/78313907,US,user,main_site,1683917572,1683919336,,
+AddBusiness,approve,22059,78313779,https://bize.admin.yelp.com/biz/78313779,https://admin.yelp.com/biz_edit/78313779,US,user,main_site,1683916157,1683926302,,
+AddBusiness,approve,7633,78314661,https://bize.admin.yelp.com/biz/78314661,https://admin.yelp.com/biz_edit/78314661,US,user,main_site,1683928191,1683928714,,
+AddBusiness,approve,17843,78314547,https://bize.admin.yelp.com/biz/78314547,https://admin.yelp.com/biz_edit/78314547,US,user,main_site,1683926077,1683926111,,
+AddBusiness,approve,9077,78314106,https://bize.admin.yelp.com/biz/78314106,https://admin.yelp.com/biz_edit/78314106,US,logged_out_user,biz_site,1683919993,1683921929,,
+AddBusiness,approve,8754,78314296,https://bize.admin.yelp.com/biz/78314296,https://admin.yelp.com/biz_edit/78314296,US,logged_out_user,biz_site,1683922493,1683925149,,
+AddBusiness,approve,21063,78314732,https://bize.admin.yelp.com/biz/78314732,https://admin.yelp.com/biz_edit/78314732,US,user,main_site,1683929236,1683929996,,
+AddBusiness,approve,7633,78314161,https://bize.admin.yelp.com/biz/78314161,https://admin.yelp.com/biz_edit/78314161,US,user,main_site,1683920647,1683921413,,

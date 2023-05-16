@@ -1,0 +1,4 @@
+attribute,action_taken,moderator_id,business_id,BizE_link,Admin_link,biz_country,source_type,source_via,time_created,time_acted,time_created_readable,time_acted_readable
+AddBusiness,approve,10089,78318230,https://bize.admin.yelp.com/biz/78318230,https://admin.yelp.com/biz_edit/78318230,US,admin_user,admin_site,1684020800,1684020804,,
+AddBusiness,approve,10089,78318475,https://bize.admin.yelp.com/biz/78318475,https://admin.yelp.com/biz_edit/78318475,US,admin_user,admin_site,1684025912,1684025916,,
+AddBusiness,approve,10089,78318231,https://bize.admin.yelp.com/biz/78318231,https://admin.yelp.com/biz_edit/78318231,US,admin_user,admin_site,1684020811,1684020812,,

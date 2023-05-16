@@ -1,0 +1,13 @@
+attribute,action_taken,moderator_id,business_id,BizE_link,Admin_link,biz_country,source_type,source_via,time_created,time_acted,time_created_readable,time_acted_readable
+AddBusiness,approve,3047,78293117,https://bize.admin.yelp.com/biz/78293117,https://admin.yelp.com/biz_edit/78293117,US,admin_user,admin_site,1683562554,1683562555,,
+AddBusiness,approve,3047,78293120,https://bize.admin.yelp.com/biz/78293120,https://admin.yelp.com/biz_edit/78293120,US,admin_user,admin_site,1683562574,1683562578,,
+AddBusiness,approve,3047,78293121,https://bize.admin.yelp.com/biz/78293121,https://admin.yelp.com/biz_edit/78293121,US,admin_user,admin_site,1683562574,1683562578,,
+AddBusiness,approve,3047,78293119,https://bize.admin.yelp.com/biz/78293119,https://admin.yelp.com/biz_edit/78293119,US,admin_user,admin_site,1683562573,1683562577,,
+AddBusiness,approve,17589,78293695,https://bize.admin.yelp.com/biz/78293695,https://admin.yelp.com/biz_edit/78293695,US,admin_user,admin_site,1683570092,1683570093,,
+AddBusiness,approve,1908,78293418,https://bize.admin.yelp.com/biz/78293418,https://admin.yelp.com/biz_edit/78293418,US,admin_user,admin_site,1683566487,1683566491,,
+AddBusiness,approve,17946,78293225,https://bize.admin.yelp.com/biz/78293225,https://admin.yelp.com/biz_edit/78293225,CA,admin_user,admin_site,1683563947,1683563949,,
+AddBusiness,approve,17946,78293223,https://bize.admin.yelp.com/biz/78293223,https://admin.yelp.com/biz_edit/78293223,CA,admin_user,admin_site,1683563945,1683563949,,
+AddBusiness,approve,17946,78293224,https://bize.admin.yelp.com/biz/78293224,https://admin.yelp.com/biz_edit/78293224,CA,admin_user,admin_site,1683563946,1683563948,,
+AddBusiness,approve,17946,78293222,https://bize.admin.yelp.com/biz/78293222,https://admin.yelp.com/biz_edit/78293222,CA,admin_user,admin_site,1683563945,1683563946,,
+AddBusiness,approve,17946,78293221,https://bize.admin.yelp.com/biz/78293221,https://admin.yelp.com/biz_edit/78293221,CA,admin_user,admin_site,1683563939,1683563944,,
+AddBusiness,approve,17589,78293021,https://bize.admin.yelp.com/biz/78293021,https://admin.yelp.com/biz_edit/78293021,US,admin_user,admin_site,1683561090,1683561090,,

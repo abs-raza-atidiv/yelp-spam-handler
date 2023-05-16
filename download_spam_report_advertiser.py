@@ -23,7 +23,10 @@ from datetime import timedelta, datetime
 from bigquery_utils import *
 from utils import *
 
-YELP_LOG_TABLE = 'advertiser_nba'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../bq-secrets.json'
+
+LOG_TABLE = ''
+FINAL_LABEL = ''
 
 ist = datetime.now() + timedelta(minutes=330)
 start= ist - timedelta(minutes=36) #changed from 38 to 33
@@ -132,9 +135,13 @@ def read_email_from_gmail():
 
 	mail = imaplib.IMAP4_SSL('imap.gmail.com')
 	mail.login('splunk.integration@atidiv.com','kboqacnbupfdawoc')
-	mail.select('advertiser_nba')
+	mail.select(LOG_TABLE)
 
 	_ , data = mail.search(None, 'ALL')
+	
+	# This flag stops script from moving email to processed label
+	# when en error is encountered while moving its data to BQ 
+	skipMigration = False 
 	
 	mail_ids = data[0]
 	id_list = mail_ids.split()  
@@ -149,114 +156,116 @@ def read_email_from_gmail():
 			if(processed_emails >= 2):
 				break
 			# processed_emails += 1
+			skipMigration = False
 
 			for response_part in data:
-				if isinstance(response_part, tuple):
-					msg = email.message_from_string(response_part[1].decode())
-					email_subject = msg['subject']
-					email_from = msg['from']
-					print ('From : ' + email_from + '\n')
-					print ('Subject : ' + email_subject + '\n')
-					if (email_from == 'splunk via Splunk_integration <splunk_integration@atidiv.com>'):
-						for part in msg.walk():				
-							if part.get_content_maintype() == 'multipart':
-								continue
-							if part.get('Content-Disposition') is None:
-								continue
+				try:
+					if isinstance(response_part, tuple):
+						msg = email.message_from_string(response_part[1].decode())
+						email_subject = msg['subject']
+						email_from = msg['from']
+						print ('Subject : ' + email_subject)
+						if (email_from == 'splunk via Splunk_integration <splunk_integration@atidiv.com>'):
+							for part in msg.walk():		
+										
+								if part.get_content_maintype() == 'multipart':
+									continue
+								if part.get('Content-Disposition') is None:
+									continue
 
-							filename = part.get_filename()
-							today_str = (datetime.now() + timedelta(minutes=330)).strftime('%m-%d-%Y_%H%M%S')
-							file_name=today_str+"_"+filename
+								filename = part.get_filename()
+								today_str = (datetime.now() + timedelta(minutes=330)).strftime('%m-%d-%Y_%H%M%S')
+								file_name=today_str+"_"+filename
 
-							att_path = os.path.join(path1, file_name)
-							fileToUpload= file_name
+								att_path = os.path.join(path1, file_name)
+								fileToUpload= file_name
 
-							#move original file to different location after removing extra biz_enc column	
-							# print(fileToUpload) 
-							if not os.path.isfile(att_path):
-								print('file downloaded')
-								fp = open(file_name, 'wb')
-								fp.write(part.get_payload(decode=True))
-								fp.close()
+								#move original file to different location after removing extra biz_enc column	
+								# print(fileToUpload) 
+								if not os.path.isfile(att_path):
+									print('file downloaded')
+									fp = open(file_name, 'wb')
+									fp.write(part.get_payload(decode=True))
+									fp.close()
 
-								df = pd.read_csv(file_name)
-								df['pull_date'] = datetime.now()
-								# import ipdb; ipdb.set_trace()
-								if(len(df)>0):
-									print('starting to load file...')
-									df1 = standardize_column(df)
-									df2gcp(df1, YELP_LOG_TABLE, mode='append')
+									df = pd.read_csv(file_name)
+									df['pull_date'] = datetime.now()
+									if(len(df)>0):
+										try:
+											print('starting to load file...')
+											# import ipdb; ipdb.set_trace()
+											df1 = standardize_column(df)
 
-								# try:
-								# 	# fileToUpload = makecopy(file_name)
-								# except Exception as e:
-								# 	print('sendemail Error in makecopy function ')
-									#sendEmail("Error in makecopy function","filename: "+fileToUpload+ " ,Exception: "+e,dev, 1)	
-							if(len(df)==0):
-								body='No spam report received from splunk'
-								print(body)								
-							else:
-								st_load_file = time.time()
-								try:
-									fileloaded=0
-									# import ipdb; ipdb.set_trace()
-									# df1 = standardize_column(df)
+											# df_cols = df1.columns
+											# db_data = gcp2df('select * from {}.{} limit 1'.format(bq_dataset, LOG_TABLE))
+											# db_cols = db_data.columns
+											# import ipdb; ipdb.set_trace()
+											# new_cols = list(set(df_cols) - set(db_cols))
+											# df1.drop(axis=1, columns=new_cols, inplace=True)
+											
+											df2gcp(df1, LOG_TABLE, mode='append')
+											time.sleep(2)
 
-									# df2gcp(df1, YELP_LOG_TABLE, mode='append')
-									# Open database connection
-									# db = MySQLdb.connect("loftanalytics.cutngg7asmkn.ap-southeast-1.rds.amazonaws.com","loft","A2t0i1D7IV","yelpListing" )
-									# # prepare a cursor object using cursor() method
-									# cursor = db.cursor()
+										except Exception as e:
+												print(str(e))
+												# skipMigration = True
+												time.sleep(2)
+																	
+								if(len(df)==0):
+									body='No spam report received from splunk'
+									print(body)
+				except Exception as e:
+						print(str(e))
+						skipMigration = True
+						time.sleep(2)
 
-									# fileToUpload=str(fileToUpload)
-									# uploadCsvInDB = "LOAD DATA LOCAL INFILE '" + fileToUpload.replace("\\", "/") + "'"; ## gets file given by vaishali
-									# uploadCsvInDB += " INTO TABLE spamReport";
-									# uploadCsvInDB += " FIELDS TERMINATED BY ',' ";
-									# uploadCsvInDB += " ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n' IGNORE 1 LINES ";
-									# uploadCsvInDB += "(  `enc_business_id`, `business_id`,`attr`, `value_submitted`, `note_by_user`, `action_`, `moderator_id`, "
-									# uploadCsvInDB += "`email_address`, `time_acted`, `time_acted_readable`, `reason`, `time_created`, `time_created_readable`, `source_ip`)"
-									# uploadCsvInDB += "SET addedOn=UTC_TIMESTAMP(), filename='"+fileToUpload.replace("\\", "/") +"',";
-									# uploadCsvInDB += "time_acted_readable=CONVERT_TZ(FROM_UNIXTIME(time_Acted,'%Y-%m-%d %h:%i:%s'),'+00:00','-08:00'),";
-									# uploadCsvInDB += "time_created_readable=CONVERT_TZ(FROM_UNIXTIME(time_created,'%Y-%m-%d %h:%i:%s'),'+00:00','-08:00');";
-
-									# print(uploadCsvInDB)
-									# cursor.execute(uploadCsvInDB)
-									# db.commit()
-									# print("Time taken to load file: %.2f mins" %(round((time.time()-st_load_file)/60,2)))
-									fileloaded=1
-								except  Exception as e:
-									print(str(e))
-									#sendEmail("Error Load Data in DB","Error on processing "+fileToUpload,dev, 1)
-								
-								# disconnect from server
-								# db.close()
-								#move file to processed folder
-								# os.rename(fileToUpload, path1+"\\processed\\"+file_name)
+			# if skipMigration: continue
 			# import ipdb; ipdb.set_trace()
 			# this section moves read email to Report_Processed folder
 			try:
 				_ , data1 = mail.fetch(str(i).encode("utf-8"), "(UID)")
 				msg_uid = parse_uid(data1[0].decode())
-				result = mail.uid('COPY', msg_uid, 'advertiser_nba_processed')
+				result = mail.uid('COPY', msg_uid, FINAL_LABEL)
 				if result[0] == 'OK':
 					_ , data1 = mail.uid('STORE', msg_uid , '+FLAGS', '(\Deleted)')
 					mail.expunge()
-				print("processed emails moved to advertiser_nba_processed label")	
+				print("processed emails moved to {} label\n".format(FINAL_LABEL))	
 			except Exception as e:
 				print(str(e))
 				#sendEmail("Error in moving processed emails to Spam_Processed label", str(e), dev, 1)
 			# import ipdb; ipdb.set_trace()
-
+		
 	if(fileToUpload==''):
 		body='No spam report received'
 		print(body)
 		#sendEmail("Daily Spam Notes not received from Splunk",body,RECIPIENT, 1)
 
 if __name__=="__main__":
-	today_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-	today_str_ist = (datetime.now() + timedelta(minutes=330)).strftime('%Y-%m-%d %H:%M:%S')
-	print("Current datetime- UTC: {0} and IST: {1}".format(today_str,today_str_ist))
-	st_main = time.time()
-	read_email_from_gmail()
-	print("Total time taken : %.2f mins" %(round((time.time() - st_main)/60,2)))
+	
+	labels_to_process = [
+		'incorrect_vl', 
+		'advertiser', 
+		'ROCS_Handled',
+		'ROCS-Accepts'
+	]
+
+	processed_label = {
+		'incorrect_vl': 'incorrect_vl_processed',
+		'advertiser': 'advertiser_vl_processed',
+		'ROCS_Handled': 'ROCS_Handled_Processed',
+		'ROCS-Accepts': 'ROCS-Accepts-Handled'
+	}
+	# import ipdb; ipdb.set_trace()
+
+	for elm in labels_to_process:
+
+		LOG_TABLE = elm
+		FINAL_LABEL = processed_label[elm]
+
+		today_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		today_str_ist = (datetime.now() + timedelta(minutes=330)).strftime('%Y-%m-%d %H:%M:%S')
+		print("Current datetime- UTC: {0} and IST: {1}".format(today_str,today_str_ist))
+		st_main = time.time()
+		read_email_from_gmail()
+		print("Total time taken : %.2f mins" %(round((time.time() - st_main)/60,2)))
 
