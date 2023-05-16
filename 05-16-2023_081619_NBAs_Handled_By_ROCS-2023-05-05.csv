@@ -1,6 +1,0 @@
-attribute,action_taken,moderator_id,business_id,BizE_link,Admin_link,biz_country,source_type,source_via,time_created,time_acted,time_created_readable,time_acted_readable
-AddBusiness,approve,1515,78282834,https://bize.admin.yelp.com/biz/78282834,https://admin.yelp.com/biz_edit/78282834,US,user,main_site,1683298628,1683298719,,
-AddBusiness,approve,9077,78282578,https://bize.admin.yelp.com/biz/78282578,https://admin.yelp.com/biz_edit/78282578,US,logged_out_user,biz_site,1683294071,1683295408,,
-AddBusiness,approve,9077,78281076,https://bize.admin.yelp.com/biz/78281076,https://admin.yelp.com/biz_edit/78281076,US,logged_out_user,biz_site,1683251745,1683289721,,
-AddBusiness,approve,16938,78278393,https://bize.admin.yelp.com/biz/78278393,https://admin.yelp.com/biz_edit/78278393,US,user,main_site,1683216530,1683292151,,
-AddBusiness,approve,19897,78282723,https://bize.admin.yelp.com/biz/78282723,https://admin.yelp.com/biz_edit/78282723,US,user,main_site,1683296810,1683297261,,
